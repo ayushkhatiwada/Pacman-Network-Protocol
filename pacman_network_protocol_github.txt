@@ -1,0 +1,474 @@
+Pacman Protocol Specification Version 1
+=======================================⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⣤⣤⣤⣤⣤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢀⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠛⠻⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⡿⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣤⣴⣿⣿⣿⣿⣿⡿⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠋⠁⠀⠀⠀⢀⣀⠀⠀⠀⠀⠀⠀⠀⣀⠀⠀⠀⠀⠀⠀⢀⣀⠀⠀
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠁⠀⠀⠀⠀⠀⣴⣿⣿⣿⣦⠀⠀⠀⣼⣿⣿⣿⡆⠀⠀⠀⣴⣿⣿⣿⣆
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣀⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⡟⠀⠀⠀⢿⣿⣿⣿⠏⠀⠀⠀⢿⣿⣿⣿⠏
+⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣄⠀⠀⠀⠀⠉⠉⠁⠀⠀⠀⠀⠀⠈⠉⠁⠀⠀⠀⠀⠀⠉⠉⠁⠀
+⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠉⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⠛⠛⠻⠿⠿⠟⠛⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+
+Terminology
+===========
+This specification uses the terms MUST, SHOULD, and MAY as defined in RFC 2119 [rfc2119]
+The Pacman Protocol runs over TCP, using a well-known port of 5432. 
+There are 9 message types, which are as follows:
+
+    1.	PASSWORD_EXCHANGE
+    2.	SYNC_START
+    3.	MAZE_UPDATE
+    4.	GAME_MODE_UPDATE (AKA STATUS UPDATE)
+    5.	PACMAN_UPDATE
+    6.	GHOST_UPDATE
+    7.	PACMAN_UPDATE_2 
+    8.	EAT
+    9.	LIVES_SCORE_UPDATE
+
+There are two ways the game can be played: “Client-Server Mode” and “Two clients, one relay server”. Please see the assignment brief for further details. Both players must provide the same IP address and password to join the same game. 
+
+Once the passwords are exchanged and confirmed to be correct, the initial STARTING_MAZE data is messaged from each player to the other. The maze of the other player will be shown on each player’s remote screen. Once all this is done a sync message will be sent from the server to the client(s) so both games can start simultaneously.
+
+The player’s pacman’s interactions with its environment are always modelled on the player’s computer, even when it is visiting the remote screen. Ghost’s motion and strategy are always modelled on their home computer. Ghosts cannot traverse the tunnels and visit the remote screen. 
+
+We use the following terminology to distinguish between visiting pacman and various game objects: 
+
+    • LOCAL: the game object is a local game object, and is currently on the local screen. 
+    • AWAY: our pacman is current away on the remote screen. 
+    • REMOTE: a game object on the remote screen that our AWAY pacman might interact with. 
+    • FOREIGN: the other player’s pacman, when it is visiting our screen
+
+The specification uses only TCP. While TCP is slightly slower than UDP it is still relatively fast especially with smaller packet sizes. Message sent in this pacman game are not large enough for speed to be compromised, hence using only TCP here is sufficient to ensure smooth and speedy gameplay. 
+
+
+Message Content, Timing, and Encoding
+=====================================
+
+In this section the content, timing, and encoding of each message will be detailed one by one. This is for easy reading and lookup for the user and makes the writer’s job much easier.
+
+Messages are fixed format, binary encoded, with all integer fields send in network byte order (i.e., big endian order).  As message type is fixed forward, no explicit length field is required.
+
+From here on, all unused bits (represented by: U), are not used but are needed to maintain byte alignment. They MUST all be set to zero in this version of the protocol. 
+
+
+
+1.	PASSWORD_EXCAHNGE
+____________________________________________________________________
+
+Contents:
+
+- Type: PASSWORD_EXCHANGE
+
+- Password: Password entered by the player. Passwords are limited so they can only contain printable ASCII characters (alphanumeric, symbols, and signs), and will have a maximum length of 15 characters. The end of the password will be followed by the ASCII NUL character to denote the end of the password. In total there will be a maximum of 16 characters (15 for the password + NUL), 8 bits per character, so the whole message will have a size of 16*8 = 128 bits. Any unused characters after NUL will be represented by zeros. 
+
+Timing: PASSWORD_EXCHANGE messages MUST be sent once and immediately when a client tries to connect to a server.
+
+Encoding:
+
+INIT messages consist of 17 bytes, encoded as follows:
+
+     0                   1                   2                   3                   
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   T   |   U   |                 Password (continued)          |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    …
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                         Password                              |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+Fields:
+
+- T: 4-bit type field. Type=PASSWORD_EXCHANGE has a decimal value of 1.
+
+- U: 4 bits, not used. 
+
+- Password: 128 bits, each byte represents an ASCII character in big-endian byte order.
+
+
+
+2.	SYNC_START
+____________________________________________________________________
+
+Contents:
+
+- Type: SYNC_START
+
+- Time: The server will send a start time to the client(s) to start the game at the same time. The server will check the current Unix time, add 1 second, and set that to be the start time of the game. Unix time is stored as a 32 bit integer so this message will be 4 bytes.
+
+Timing: SYNC_START will be sent once after passwords have been correctly exchanged and once when both players have reached the next level. 
+
+Encoding:
+
+SYNC_START messages consist of 5 bytes, encoded as follows:
+
+     0                   1                   2                   3                   
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   T   |   U   |             Start Time (continued)            |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    +-+-+-+-+-+-+-+-+-+
+    |    Start Time   |                                          
+    +-+-+-+-+-+-+-+-+-+
+
+Fields:
+
+- T: 4-bit type field. Type= SYNC_START has a decimal value of 2.
+
+- U: 4 bits, not used. 
+
+- Start Time: 32-bit unsigned integer in big-endian byte order. 
+
+
+
+3.	MAZE_UPDATE
+______________________________________________________________
+
+Contents:
+
+- Type: MAZE_UPDATE
+
+- Maze: Mazes can be represented/drawn using ascii characters. The maze contains 84 columns and 31 rows of characters. 84*31 = 2604 characters. Adding a new line character at the end of each of the 31 rows gives us a total of 2635 characters. Each square on the maze is represented using 3 characters (e.g. “ /-“), thus there are (2604)/3 = 868 squares. Each square can be represented using 4 bits shown below: 
+
+   " /-" = 0000
+   "-/ " = 0001
+   "---" = 0010
+   "-\\ " = 0011
+   " \\-" = 0100
+   " | " = 0101
+   "###" = 0110
+   "   " = 0111
+   " . " = 1000
+   " * " = 1001
+   " A " = 1010
+   " B " = 1011
+
+Thus, 868 squares * 4 bits each = 3472 bits = 434 bytes. Since we know the size of the maze in squares, and the order the squares are sent, we don’t need to transmit the new line messages. 
+  
+Timing: MAZE_UPDATE MUST be sent upon the game starting. From then MAZE_UPDATE is sent every 16.6666…ms (60 frames per second).
+
+Encoding:
+
+MAZE_UPDATE messages consist of 435 bytes, encoded as follows:
+
+     0                   1                   2                   3                   
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   T   |   U   | Sqr 1 | Sqr 2 | Sqr 3 | Sqr 4 | Sqr 5 | Sqr 6 |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    …
+    +-+-+-+-+-+-+-+-+-+-+-+-+
+    |Sqr 866|Sqr 867|Sqr 868| 
+    +-+-+-+-+-+-+-+-+-+-+-+-+
+
+Fields:
+
+- T: 4-bit type field. Type=MAZE_UPDATE has a decimal value of 3.
+
+- U: 4 bits, not used. 
+
+- Sqr num: 4-bit integer representing a square (see above)
+
+
+
+4.	GAME_MODE_UPDATE
+______________________________________________________________
+
+Contents:
+
+- Type: GAME_MODE_UPDATE
+
+- Game mode: The local game board has 6 states associated with it, each represented by an integer as follows:
+
+    0.	STARTUP
+    1.	CHASE
+    2.	FRIGHTEN
+    3.	GAME_OVER
+    4.	NEXT_LEVEL_WAIT
+    5.	READY_TO_RESTART
+
+Timing: GAME_MODE_UPDATE messages are sent every time the local game board changes.
+
+Encoding:
+
+GAME_MODE_UPDATE messages consist of 1 byte, encoded as follows:
+
+     0                   
+     0 1 2 3 4 5 6 7 
+    +-+-+-+-+-+-+-+-+
+    |   T   |U|  GM |           
+    +-+-+-+-+-+-+-+-+
+
+Fields:
+
+- T: 4-bit type field. Type= GAME_MODE_UPDATE has a decimal value of 4.
+
+- U: 1 bit, not used. 
+
+- GM (Game Mode): 3 bits unsigned integer in big-endian byte order.
+
+
+
+5.	PAC_MAN_UPDATE
+______________________________________________________________
+
+Contents:
+
+- Type: PACMAN_UPDATE
+
+- Position X and Y: (X,Y) position of the pacman. X is an integer in the range 0-1023, where 0 indicates the left end of the screen and 1023 indicates the right end. Y is also an integer in the range 0-1023 but 0 indicates the top end of the screen and 1023 indicated the bottom end.
+
+- Direction: The directions the pacman could face: UP, LEFT, RIGHT, DOWN, enumerated by integers as follows: 
+
+    0: UP
+    1: LEFT
+    2: RIGHT
+    3: DOWN
+
+- Speed: The speed the pacman is travelling at in the direction it is facing. Since the pacman always moves at a constant speed there are two possibilities. 0 means the pacman is stationary and 1 means it is moving at 1 position unit per 16.6666… ms.
+
+Timing: PACMAN_UPDATE messages SHOULD be sent every 16.6666… ms 
+
+Encoding: 
+
+PACMAN_UPDATE messages consist of 4 bytes, encoded as follows:
+
+     0                   1                   2                   3                   
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   T   |    U    |   Pac X Position  |   Pac Y Position  | D |S|
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+Fields:
+
+- T: 4-bit type field. Type=PACMAN_UPDATE has a decimal value of 5.
+
+- U: 5 bits, not used. 
+
+- Pac X Position: 10 bits giving an unsigned integer in big-endian byte order. 
+
+- Pac Y Position: 10 bits giving an unsigned integer in big-endian byte order. 
+
+- D: (Direction) 2 bits giving an unsigned integer in big-endian byte order.
+
+- S: (Speed) 1 bit, either a 0 or 1, representing the pacman speed.
+
+
+
+6.	GHOST_UPDATE
+__________________________________________________________________________________
+
+Contents:
+
+- Type: GHOST_UPDATE
+
+- Ghost Number: Each of the 4 ghosts is represented by a number 0-3 as follows:
+
+    0 : Blinky (Red Ghost)
+    1 : Pinky (Pink Ghost)
+    2 : Inky (Cyan Ghost)
+    3 : Clyde (Orange Ghost)
+
+- Position X and Y: (X,Y) position of the Ghost. X is an integer in the range 0-1023, where 0 indicates the left end of the screen and 1023 indicates the right end. Y is also an integer in the range 0-1023 but 0 indicates the top end of the screen and 1023 indicated the bottom end.
+
+- Direction: The directions the ghost could face: UP, LEFT, RIGHT, DOWN, enumerated by integers as follows: 
+
+    0: UP
+    1: LEFT
+    2: RIGHT
+    3: DOWN
+
+- Speed: The speed of the ghost in the direction it is facing. The speed of the ghost is a floating-point number between 0 and 1. The number represents the position units per 16.6666… ms. Speed varies depending on the mode of the Ghost.
+
+- Ghost Mode: There are 5 modes the ghost can be each represented by an integer between 0-4 as follows:
+
+    0: SCATTER
+    1: CHASE
+    2: FRIGHTEN
+    3: FRIGHTEN TRAPPED
+    4: EYES
+
+Timing: GHOST_UPDATE messages SHOULD be sent every 16.6666… ms. 
+
+Each message specifies information about one ghost only. 4 messages will be sent together, one for each ghost.
+
+Encoding: 
+
+GHOST_UPDATE messages consist of 8 bytes, encoded as follows:
+
+     0                   1                   2                   3                   
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   T   |U|GN |Drn|  Ghost X Position |  Ghost Y Position |Mode |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                           Speed                               |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+Fields:
+
+- T: 4-bit type field. Type=GHOST_UPDATE has a decimal value of 6.
+
+- U: 1 bit, not used
+
+- GN: (Ghost Number) 2 bits unsigned integer in big-endian byte order. 
+
+- Drn: (Direction) 2 bits unsigned integer in big-endian byte order.
+
+- Ghost X Position: 10 bits unsigned integer in big-endian byte order.
+
+- Ghost Y Position: 10 bits unsigned integer in big-endian byte order.
+
+- Mode: 3 bits unsigned integer in big-endian byte order.
+
+- Speed: 32 bits unsigned float in big-endian byte order.
+
+
+
+7.	PACMAN_UPDATE_2
+____________________________________________________________________
+
+Contents:
+
+- Type: PACMAN_UPDATE_2
+
+- Foreign Pacman Arrived: Indicates whether the other pacman has entered into the LOCAL maze and which tunnel it has entered through. If the FOREIGN pacman has entered through the left side it must emerge onto the LOCAL maze from the right side and vice versa. The various possibilities are represented by integers as follows:
+
+    00 : No FOREIGN pacman. Other pacman has not arrived onto our LOCAL maze or has left. 
+    01 : FOREIGN pacman has arrived entering from the left side of its LOCAL maze.
+    10 : FOREIGN pacman has arrived entering from the right side of its LOCAL maze.
+
+- Dead: Indicates whether the pacman is alive or dead. 1 means it is alive and 0 means it is dead.
+
+- Pacman Go Home: Some events require that our AWAY pacman be forcibly sent home. This happens when the level is completed on the remote screen, for example. The remote system sends a “pacman go home” message. Our system then resets our pacman to LOCAL and sends a “foreign pacman left” message in reply. 1 indicates the pacman must go home and 0 indicates that nothing should be done.
+
+Timing: PACMAN_UPDATE_2 messages SHOULD only be sent when the status of the pacman changes e.g., when it dies or goes from being FOREIGN to not FOREIGN and vice versa.
+
+Encoding:
+
+PACMAN_UPDATE_2 messages consist of 2 bytes, encoded as follows:
+
+     0                   1                                      
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   T   |       U       | F |D|H|
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+Fields:
+
+- T: 4-bit type field. Type=PACMAN_UPDATE_2 has a decimal value of 7.
+
+- U: 8 bits, unused
+
+- F: (Is Foreign) 2-bit unsigned integer in big-endian byte order
+
+- D: (Died) 1-bit unsigned integer in big-endian byte order
+
+- H: (Pacman Go Home) 1-bit unsigned integer in big-endian byte order
+
+
+
+8.	EAT
+___________________________________________________________________
+
+Contents:
+
+- Type: EAT
+
+- Food/Power Pill Eaten: 2-bit integer that indicates whether a food item or power pill has been eaten along with its X,Y coordinate. 0 indicates nothing has been eaten. 1 indicates a food item has been eaten and 2 indicates a power pill has been eaten. X is an integer in the range 0-1023, where 0 indicates the left end of the screen and 1023 indicates the right end. Y is also an integer in the range 0-1023 but 0 indicates the top end of the screen and 1023 indicated the bottom end.
+
+- Ghost eaten: Integer that indicates to the other player that our LOCAL pacman has eaten a LOCAL ghost. First digit 0/1 represents if a ghost has been eaten and the second digit represents which ghost has been eaten as follows: 
+
+    00 : No ghosts eaten
+    10 : Blinky (Red Ghost) eaten
+    11 : Pinky (Pink Ghost) eaten
+    12 : Inky (Cyan Ghost) eaten
+    13 : Clyde (Orange Ghost) eaten
+
+- Foreign pacman ate ghost: Integer that indicates to the other player that their FOREIGN pacman ate a LOCAL ghost on our screen. First digit 0/1 represents if a ghost has been eaten and the second digit represents which ghost has been eaten as follows: 
+
+    00 : No ghosts eaten
+    10 : Blinky (Red Ghost) eaten by FOREIGN pacman 
+    11 : Pinky (Pink Ghost) eaten by FOREIGN pacman
+    12 : Inky (Cyan Ghost) eaten by FOREIGN pacman
+    13 : Clyde (Orange Ghost) eaten by FOREIGN pacman
+
+Timing: EAT update messages SHOULD be sent only when something has been eaten either by our LOCAL pacman or the FOREIGN pacman.
+
+Encoding:
+
+EAT messages consist of 5 bytes, encoded as follows:
+
+     0                   1                   2                   3                   
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   T   |     U     |FP |  Food X Position  |  Food Y Position  |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    +-+-+-+-+-+-+-+-+
+    |   GE  | FPAE  |
+    +-+-+-+-+-+-+-+-+
+
+Fields:
+
+- T: 4-bit type field. Type=EAT has a decimal value of 8.
+
+- U: 6 bits, not used.
+
+- FP: (Food/Power pill eaten) 2 bit unsigned integer in big-endian byte order. 
+
+- Food X, Y position: 10 bits unsigned integer in big-endian byte order.
+
+- GE: (Ghost Eaten) 4 bits unsigned integer in big-endian byte order.
+
+- FPAE: (Foreign pacman ate ghost) 4 bits unsigned integer in big-endian byte order.
+
+
+
+9. LIVES_SCORE_UPDATE
+____________________________________________________________________
+
+Contents:
+
+- Type: LIVES_SCORE_UPDATE
+
+- Lives: Integer from 0-5 indicating how many lives the pacman has left.
+
+- Score: Integer indicating the current score. Since the highest possible pacman score is 3,333,360 we need 22 bits to store this number
+
+    (2^21) - 1 < 3,333,360 < (2^22) - 1 
+
+Message Timing: LIVES_SCORE_UPDATE messages SHOULD be sent every 16.6666… ms.
+
+Encoding:
+
+LIVES_SCORE_UPDATE messages consist of MM bytes, encoded as follows:
+
+     0                   1                   2                   3                   
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   T   |  U  |Lives|                Score                      |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+Fields:
+
+- T: 4-bit type field. Type=LIVES_SCORE_UPDATE has a decimal value of 9.
+
+- U: 3 bits, not used.
+
+- Lives: 3 bits unsigned integer in big-endian byte order.
+
+- Score: 22 bits unsigned integer in big-endian byte order.
+
+
